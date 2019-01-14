@@ -48,7 +48,9 @@ pub use block_import::{BlockImport, JustificationImport, ImportBlock, BlockOrigi
 
 /// Trait for getting the authorities at a given block.
 pub trait Authorities<B: Block> {
-	type Error: ::std::error::Error + Send + 'static;	/// Get the authorities at the given block.
+	type Error: std::error::Error + Send + 'static;
+
+	/// Get the authorities at the given block.
 	fn authorities(&self, at: &BlockId<B>) -> Result<Vec<AuthorityIdFor<B>>, Self::Error>;
 }
 
@@ -108,5 +110,20 @@ impl<T: SyncOracle> SyncOracle for Arc<T> {
 	}
 	fn is_offline(&self) -> bool {
 		T::is_offline(&*self)
+	}
+}
+
+decl_runtime_apis! {
+	/// API necessary for block authorship with aura.
+	pub trait ConsensusApi {
+		/// Return the slot duration in seconds for Aura.
+		/// Currently, only the value provided by this type at genesis
+		/// will be used.
+		///
+		/// Dynamic slot duration may be supported in the future.
+		fn slot_duration() -> u64;
+
+		/// Get the authorities at the given block.
+		fn authorities() -> Vec<AuthorityIdFor<Block>>;
 	}
 }
