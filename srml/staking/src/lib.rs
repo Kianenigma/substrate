@@ -1195,7 +1195,7 @@ impl<T: Trait> Module<T> {
 			}
 
 			let total_reward = total_imbalance.peek();
-			println!("Total reward = {:?}", total_reward);
+			rstd::if_std! { println!("Total reward = {:?}", total_reward); }
 			Self::deposit_event(RawEvent::Reward(total_reward));
 			T::Reward::on_unbalanced(total_imbalance);
 			T::OnRewardMinted::on_dilution(total_reward, total_rewarded_stake);
