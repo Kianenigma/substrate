@@ -1173,7 +1173,7 @@ impl<T: Trait> Module<T> {
 			let validator_len: BalanceOf<T> = (validators.len() as u32).into();
 			let total_rewarded_stake = Self::slot_stake() * validator_len;
 
-			rstd::if_std! { println!("validator_len = {:?} // total_rewarded_stake = {:?}", validator_len, total_rewarded_stake); }
+			rstd::if_std! { println!("validator_len = {:?} // slot_stake = {:?} // total_rewarded_stake = {:?}", validator_len, Self::slot_stake(), total_rewarded_stake); }
 
 			let total_payout = inflation::compute_total_payout(
 				total_rewarded_stake.clone(),
