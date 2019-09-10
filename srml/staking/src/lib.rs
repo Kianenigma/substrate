@@ -1174,7 +1174,8 @@ impl<T: Trait> Module<T> {
 			let total_rewarded_stake = Self::slot_stake() * validator_len;
 
 			rstd::if_std! {
-				println!("validator_len = {:?} // slot_stake = {:?} // total_issuance = {:?} // total_rewarded_stake = {:?}",
+				println!("era_duration = {:?} // validator_len = {:?} // slot_stake = {:?} // total_issuance = {:?} // total_rewarded_stake = {:?}",
+					era_duration,
 					validator_len,
 					Self::slot_stake(),
 					T::Currency::total_issuance(),
