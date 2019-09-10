@@ -344,12 +344,12 @@ impl<T: Trait> OnDilution<BalanceOf<T>> for Module<T> {
 		// pre dilution and post-dilution.
 		if !minted.is_zero() && !portion.is_zero() {
 			let total_issuance = T::Currency::total_issuance();
-			println!("1 minted = {:?} // portion = {:?} // total_issuance = {:?}", minted, portion, total_issuance);
+			rstd::if_std! { println!("1 minted = {:?} // portion = {:?} // total_issuance = {:?}", minted, portion, total_issuance); }
 			if let Some(funding) = total_issuance.checked_sub(&portion) {
 				let funding = funding / portion;
-				println!("2 funding = {:?}", funding);
+				rstd::if_std! { println!("2 funding = {:?}", funding); }
 				if let Some(funding) = funding.checked_mul(&minted) {
-					println!("3 funding = {:?}", funding);
+					rstd::if_std! { println!("3 funding = {:?}", funding); }
 					Self::deposit_event(RawEvent::HowMuch(funding));
 					Self::on_unbalanced(T::Currency::issue(funding));
 				}
