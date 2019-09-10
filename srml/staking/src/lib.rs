@@ -1173,6 +1173,8 @@ impl<T: Trait> Module<T> {
 			let validator_len: BalanceOf<T> = (validators.len() as u32).into();
 			let total_rewarded_stake = Self::slot_stake() * validator_len;
 
+			rstd::if_std! { println!("validator_len = {:?} // total_rewarded_stake = {:?}", validator_len, total_rewarded_stake); }
+
 			let total_payout = inflation::compute_total_payout(
 				total_rewarded_stake.clone(),
 				T::Currency::total_issuance(),
@@ -1180,17 +1182,20 @@ impl<T: Trait> Module<T> {
 				<BalanceOf<T>>::from(era_duration.saturated_into::<u32>()),
 			);
 
+			rstd::if_std! { println!("total_payout = {:?} ", total_payout); }
 			let mut total_imbalance = <PositiveImbalanceOf<T>>::zero();
 
 			let total_points = rewards.total;
 			for (v, points) in validators.iter().zip(rewards.rewards.into_iter()) {
 				if points != 0 {
 					let reward = multiply_by_rational(total_payout, points, total_points);
+					rstd::if_std! { println!("+ rewarding ==> {:?} * {:?}/{:?} = {:?}", total_payout, points, total_points, reward); }
 					total_imbalance.subsume(Self::reward_validator(v, reward));
 				}
 			}
 
 			let total_reward = total_imbalance.peek();
+			println!("Total reward = {:?}", total_reward);
 			Self::deposit_event(RawEvent::Reward(total_reward));
 			T::Reward::on_unbalanced(total_imbalance);
 			T::OnRewardMinted::on_dilution(total_reward, total_rewarded_stake);
