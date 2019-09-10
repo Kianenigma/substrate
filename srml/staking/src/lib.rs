@@ -1173,7 +1173,14 @@ impl<T: Trait> Module<T> {
 			let validator_len: BalanceOf<T> = (validators.len() as u32).into();
 			let total_rewarded_stake = Self::slot_stake() * validator_len;
 
-			rstd::if_std! { println!("validator_len = {:?} // slot_stake = {:?} // total_rewarded_stake = {:?}", validator_len, Self::slot_stake(), total_rewarded_stake); }
+			rstd::if_std! {
+				println!("validator_len = {:?} // slot_stake = {:?} // total_issuance = {:?} // total_rewarded_stake = {:?}",
+					validator_len,
+					Self::slot_stake(),
+					T::Currency::total_issuance(),
+					total_rewarded_stake,
+				);
+			}
 
 			let total_payout = inflation::compute_total_payout(
 				total_rewarded_stake.clone(),
@@ -1449,7 +1456,7 @@ impl<T: Trait + authorship::Trait> authorship::EventHandler<T::AccountId, T::Blo
 
 // This is guarantee not to overflow on whatever values.
 // `num` must be inferior to `den` otherwise it will be reduce to `den`.
-fn multiply_by_rational<N>(value: N, num: u32, den: u32) -> N
+pub fn multiply_by_rational<N>(value: N, num: u32, den: u32) -> N
 	where N: SimpleArithmetic + Clone
 {
 	let num = num.min(den);
@@ -1468,7 +1475,6 @@ fn multiply_by_rational<N>(value: N, num: u32, den: u32) -> N
 		// Result fits into u32 as num < total_points
 		(rem_part as u32).into()
 	};
-
 	result_divisor_part + result_remainder_part
 }
 

@@ -2148,3 +2148,9 @@ fn dont_slash_if_fraction_is_zero() {
 		assert_eq!(Staking::force_era(), Forcing::NotForcing);
 	});
 }
+
+#[test]
+fn faulty() {
+	use super::multiply_by_rational;
+	assert_eq!(multiply_by_rational(930837661547321874659 as u128, 400u32, 780u32), 477352646947344551107);
+}
